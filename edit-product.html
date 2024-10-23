@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chỉnh sửa hàng hóa</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+        .container {
+            width: 50%;
+            text-align: center;
+        }
+        input[type="text"], button {
+            padding: 10px;
+            font-size: 16px;
+            margin: 10px;
+        }
+        .price-counter {
+            display: inline-flex;
+            align-items: center;
+        }
+        input[type="number"] {
+            width: 60px;
+            padding: 10px;
+            font-size: 16px;
+            text-align: center;
+        }
+        button.counter-btn {
+            width: 30px;
+            height: 30px;
+            font-size: 18px;
+            margin: 5px;
+        }
+        .btn-save {
+            background-color: #4CAF50; /* Màu xanh lá cây */
+            color: white;
+        }
+
+        .btn-back {
+            background-color: #808080; /* Màu xám */
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Chỉnh sửa hàng hóa</h1>
+        <input type="text" id="productName" placeholder="Tên hàng hóa">
+        <br>
+        <div class="price-counter">
+
+            <input type="number" id="productPrice" value="1" placeholder="Giá hàng hóa">
+ 
+        </div>
+        <br>
+        <button class="btn-save" onclick="saveProduct()">Lưu thay đổi</button>
+        <button class="btn-back" onclick="goBack()">Quay lại</button>
+    </div>
+
+    <script>
+        let products = JSON.parse(localStorage.getItem('products')) || [];
+        const editIndex = localStorage.getItem('editIndex');
+
+        window.onload = function() {
+            if (editIndex !== null) {
+                const product = products[editIndex];
+                document.getElementById('productName').value = product.name;
+                document.getElementById('productPrice').value = product.price;
+            }
+        };
+
+        function incrementPrice() {
+            const priceInput = document.getElementById('productPrice');
+            priceInput.value = parseInt(priceInput.value) + 1;
+        }
+
+        function decrementPrice() {
+            const priceInput = document.getElementById('productPrice');
+            if (parseInt(priceInput.value) > 1) {
+                priceInput.value = parseInt(priceInput.value) - 1;
+            }
+        }
+
+        function saveProduct() {
+            const productName = document.getElementById('productName').value;
+            const productPrice = document.getElementById('productPrice').value;
+
+            if (productName && productPrice >= 1) {
+                products[editIndex] = { name: productName, price: parseInt(productPrice) };
+                localStorage.setItem('products', JSON.stringify(products));
+                localStorage.removeItem('editIndex');
+                alert(`Đã lưu thay đổi cho sản phẩm: ${productName} - ${productPrice} VND`);
+                goBack();
+            } else {
+                alert('Vui lòng nhập tên hàng hóa và giá hợp lệ.');
+            }
+        }
+
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
